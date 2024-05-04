@@ -63,7 +63,7 @@ services:
     command:
       - '--docker_only=true'
       - '--housekeeping_interval=30s'
-      - '--disable_metrics=disk,sched,process,diskIO,hugetlb,resctrl,memory_numa,advtcp,tcp,referenced_memory'
+      - '--disable_metrics=disk'
     privileged: true
     networks:
       cadvisor_prometheus:
