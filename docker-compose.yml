@@ -61,9 +61,9 @@ services:
     devices:
       - /dev/kmsg
     command:
-      - '-docker_only'
-      - '-housekeeping_interval=30s'
-      - '-disable_metrics=disk,advtcp,cpu_topology,cpuset,hugetlb,memory_numa,process,referenced_memory,resctrl,sched,tcp,udp'
+      - '--docker_only=true'
+      - '--housekeeping_interval=30s'
+      - '--disable_metrics=disk,advtcp,cpu_topology,cpuset,hugetlb,memory_numa,process,referenced_memory,resctrl,sched,tcp,udp'
     privileged: true
     networks:
       cadvisor_prometheus:
