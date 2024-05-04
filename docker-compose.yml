@@ -62,8 +62,8 @@ services:
       - /dev/kmsg
     command:
       - '--docker_only=true'
-      - '--housekeeping_interval=30s'
-      - '--disable_metrics=disk'
+      - '--housekeeping_interval=15s'
+      - '--disable_metrics=disk,referenced_memory'
     privileged: true
     networks:
       cadvisor_prometheus:
