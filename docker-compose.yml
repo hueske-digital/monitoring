@@ -37,7 +37,7 @@ services:
     networks:
       grafana_prometheus:
       nodeexporter_prometheus:
-      dockerexporter_prometheus:
+      cadvisor_prometheus:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -49,13 +49,24 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
 
-  dockerexporter:
-    image: spx01/dex
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    command:
+      - '--docker_only=true'
+      - '--housekeeping_interval=15s'
+      - '--disable_metrics=disk,referenced_memory'
+    privileged: true
     networks:
-      dockerexporter_prometheus:
+      cadvisor_prometheus:
 
 volumes:
   prometheus_data:
@@ -64,7 +75,7 @@ volumes:
 networks:
   grafana_prometheus:
   nodeexporter_prometheus:
-  dockerexporter_prometheus:
+  cadvisor_prometheus:
   proxy_apps:
     name: proxy_apps
     external: true
