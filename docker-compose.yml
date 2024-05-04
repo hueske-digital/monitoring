@@ -10,15 +10,17 @@ services:
     restart: unless-stopped
     volumes:
       - grafana_data:/data
+      - $PWD/grafana/datasources:/etc/grafana/provisioning/datasources
+      - $PWD/grafana/dashboards:/etc/grafana/provisioning/dashboards
     networks:
+      grafana_prometheus:
       proxy_apps:
-      default:
 
   nodeexporter:
     image: prom/prometheus
     restart: unless-stopped
     networks:
-      default:
+      nodeexporter_prometheus:
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -33,7 +35,9 @@ services:
     image: prom/prometheus
     restart: unless-stopped
     networks:
-      default:
+      grafana_prometheus:
+      nodeexporter_prometheus:
+      cadvisor_prometheus:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -58,13 +62,16 @@ services:
       - /dev/kmsg
     privileged: true
     networks:
-      - default
+      cadvisor_prometheus:
 
 volumes:
   prometheus_data:
   grafana_data:
 
 networks:
+  grafana_prometheus:
+  nodeexporter_prometheus:
+  cadvisor_prometheus:
   proxy_apps:
     name: proxy_apps
     external: true
