@@ -17,7 +17,7 @@ services:
       proxy_apps:
 
   nodeexporter:
-    image: prom/prometheus
+    image: prom/node-exporter
     restart: unless-stopped
     networks:
       nodeexporter_prometheus:
